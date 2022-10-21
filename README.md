@@ -482,27 +482,24 @@ ifc.setOptions(options)
 ifc.openProgram(currentProgram)
 
 for caller in callers:
-    res = ifc.decompileFunction(caller, 60, monitor)
-    high_func = res.getHighFunction()
-    lsm = high_func.getLocalSymbolMap()
-    symbols = lsm.getSymbols()
-    if high_func:
-        opiter = high_func.getPcodeOps()
-        while opiter.hasNext():
-            op = opiter.next()
-            mnemonic = str(op.getMnemonic())
-            if mnemonic == "CALL":
-                inputs = op.getInputs()
-                addr = inputs[0].getAddress()
-                args = inputs[1:] # List of VarnodeAST types
-                if addr == target_addr:
-                    print("Call to {} at {} has {} arguments: {}".format(addr, op.getSeqnum().getTarget(), len(args), args))
-                    for arg in args:
-                        # Do stuff with each `arg` here...
-                        # Not sure what to do? Check out this great article by Lars A. Wallenborn for some ideas:
-                        # https://blag.nullteilerfrei.de/2020/02/02/defeating-sodinokibi-revil-string-obfuscation-in-ghidra/
-                        # Specifically, search for the function implementation of "traceVarnodeValue"
-                        pass
+    if caller != None:
+        res = ifc.decompileFunction(caller, 60, monitor)
+        high_func = res.getHighFunction()
+        lsm = high_func.getLocalSymbolMap()
+        symbols = lsm.getSymbols()
+        if high_func:
+            opiter = high_func.getPcodeOps()
+            while opiter.hasNext():
+                op = opiter.next()
+                mnemonic = str(op.getMnemonic())
+                if mnemonic == "CALL":
+                    inputs = op.getInputs()
+                    addr = inputs[0].getAddress()
+                    args = inputs[1:] # List of VarnodeAST types
+                    if addr == target_addr:
+                        print("Call to {} at {} has {} arguments: {}".format(addr, op.getSeqnum().getTarget(), len(args), args))
+                        for arg in args:
+                            pass
 ```
 
 <details>
